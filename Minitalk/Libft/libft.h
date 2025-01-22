@@ -6,13 +6,14 @@
 /*   By: antolefe <antolefe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/31 14:27:07 by antolefe          #+#    #+#             */
-/*   Updated: 2024/06/05 15:31:22 by antolefe         ###   ########.fr       */
+/*   Updated: 2025/01/22 13:48:08 by antolefe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBFT_H
 # define LIBFT_H
 
+# include <stdarg.h>
 # include <stddef.h>
 # include <stdio.h>
 # include <stdlib.h>
@@ -54,6 +55,20 @@ void				ft_putchar_fd(char c, int fd);
 void				ft_putstr_fd(char *str, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
+int					ft_print_char(int c);
+int					ft_print_str(char *str, int *output);
+int					get_len(int n);
+void				ft_print_id(int n, int *output);
+size_t				ft_ptrlen(unsigned long long n);
+void				ft_putptr(unsigned long long n);
+void				ft_print_ptr(unsigned long long n, int *output);
+void				ft_print_u(unsigned int n, int *output);
+size_t				ft_hexlen(unsigned int value);
+void				ft_puthex(unsigned int n, const char c);
+void				ft_print_hexa(unsigned int value, const char c,
+						int *output);
+void				print_type(const char c, va_list value, int *output);
+int					ft_printf(const char *str, ...);
 
 typedef struct s_list
 {
