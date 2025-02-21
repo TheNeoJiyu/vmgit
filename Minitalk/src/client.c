@@ -6,7 +6,7 @@
 /*   By: antolefe <antolefe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 10:16:04 by antolefe          #+#    #+#             */
-/*   Updated: 2025/01/22 16:50:26 by antolefe         ###   ########.fr       */
+/*   Updated: 2025/02/21 17:37:39 by antolefe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	main(int argc, char **argv)
 		write(STDERR_FILENO, "Usage: ./client [PID] \"message\"\n", 33);
 		exit(EXIT_FAILURE);
 	}
-	server_pid = atoi(argv[1]);
+	server_pid = ft_atoi(argv[1]);
 	message = argv[2];
 	if (kill(server_pid, 0) == -1)
 	{
@@ -97,56 +97,3 @@ int	main(int argc, char **argv)
 	pause();
 	return (EXIT_SUCCESS);
 }
-
-// void	send_char(char c, pid_t server_pid)
-// {
-// 	int			bit;
-// 	struct sigaction	sa;
-
-// 	bit = 0;
-// 	sa.sa_handler = ack_handler;
-// 	sa.sa_flags = 0;
-// 	sigemptyset(&sa.sa_mask);
-// 	if (sigaction(SIGUSR1, &sa, NULL) == -1)
-// 	{
-// 		perror("sigaction");
-// 		exit(EXIT_FAILURE);
-// 	}
-// 	while (bit < CHAR_BIT)
-// 	{
-// 		if (c & (0x80 >> bit))
-// 		{
-// 			if (kill(server_pid, SIGUSR1) == -1)
-// 			{
-// 				perror("kill");
-// 				exit(EXIT_FAILURE);
-// 			}
-// 		}
-// 		else
-// 		{
-// 			if (kill(server_pid, SIGUSR2) == -1)
-// 			{
-// 				perror("kill");
-// 				exit(EXIT_FAILURE);
-// 			}
-// 		}
-// 		while (!g_ack_received) // Attente d'accusé de réception
-// 			pause();
-// 		g_ack_received = 0;
-// 		bit++;
-// 	}
-// }
-// volatile sig_atomic_t	g_ack_received = 0;
-
-// void	ack_handler(int signo)
-// {
-// 	(void)signo;
-// 	g_ack_received = 1;
-// }
-
-// void	end_handler(int signo)
-// {
-// 	(void)signo;
-// 	write(STDOUT_FILENO, "Message received\n", 17);
-// 	exit(EXIT_SUCCESS);
-// }

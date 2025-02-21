@@ -6,45 +6,91 @@
 /*   By: antolefe <antolefe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:03:59 by antolefe          #+#    #+#             */
-/*   Updated: 2025/01/22 16:50:15 by antolefe         ###   ########.fr       */
+/*   Updated: 2025/02/21 20:01:57 by antolefe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
+static t_client	*clients = NULL;
+
+static t_client	*get_client(pid_t pid)
+{
+	t_client	*tmp = clients;
+
+	while (tmp)
+	{
+		if (tmp->pid == pid)
+			return (tmp);
+		tmp = tmp->next;
+	}
+	tmp = malloc(sizeof(t_client));
+	if (!tmp)
+		return (NULL);
+	tmp->pid = pid;
+	tmp->c = 0;
+	tmp->bit = 0;
+	tmp->next = clients;
+	clients = tmp;
+	return (tmp);
+}
+
+static void	remove_client(pid_t pid)
+{
+	t_client	*prev = NULL;
+	t_client	*tmp = clients;
+
+	while (tmp)
+	{
+		if (tmp->pid == pid)
+		{
+			if (prev)
+				prev->next = tmp->next;
+			else
+				clients = tmp->next;
+			free(tmp);
+			return;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
+}
+
 void	handler(int signo, siginfo_t *info, void *more_info)
 {
-	static char		c;
-	static int		bit;
-	static pid_t	client;
+	t_client	*client;
 
 	(void)more_info;
-	if (info->si_pid)
-		client = info->si_pid;
-	if (SIGUSR1 == signo)
-		c |= (0b10000000 >> bit);
-	else if (SIGUSR2 == signo)
-		c &= ~(0b10000000 >> bit);
-	++bit;
-	if (CHAR_BIT == bit)
+	if (!info || info->si_pid <= 0 || !(client = get_client(info->si_pid)))
+		return;
+	if (signo == SIGUSR1)
+		client->c |= (0b10000000 >> client->bit);
+	else
+		client->c &= ~(0b10000000 >> client->bit);
+	if (++client->bit == 8)
 	{
-		bit = 0;
-		if ('\0' == c)
+		write(STDOUT_FILENO, &client->c, 1);
+		if (!client->c)
 		{
 			write(STDOUT_FILENO, "\n", 1);
-			send_signal(client, SIGUSR2);
-			return ;
+			kill(client->pid, SIGUSR2);
+			remove_client(client->pid);
 		}
-		write(STDOUT_FILENO, &c, 1);
+		client->bit = 0;
 	}
-	kill(client, SIGUSR1);
+	kill(client->pid, SIGUSR1);
 }
 
 int	main(void)
 {
-	ft_printf("Server PID=%d\n", getpid());
-	setup_signal(SIGUSR1, handler, true);
-	setup_signal(SIGUSR2, handler, true);
+	struct sigaction sa;
+
+	printf("Server PID=%d\n", getpid());
+	sa.sa_sigaction = handler;
+	sa.sa_flags = SA_SIGINFO;
+	sigemptyset(&sa.sa_mask);
+	sigaction(SIGUSR1, &sa, NULL);
+	sigaction(SIGUSR2, &sa, NULL);
 	while (1)
 		pause();
 	return (EXIT_SUCCESS);

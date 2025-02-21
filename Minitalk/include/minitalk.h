@@ -6,7 +6,7 @@
 /*   By: antolefe <antolefe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:06:29 by antolefe          #+#    #+#             */
-/*   Updated: 2025/01/22 14:08:11 by antolefe         ###   ########.fr       */
+/*   Updated: 2025/02/21 20:01:55 by antolefe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,20 @@
 # include <sys/types.h>
 # include <unistd.h>
 
+void		signal_handler(int signo);
+void		setup_signal_handler(void);
+void		send_bit(char c, int bit, pid_t server_pid);
+void		send_char(char c, pid_t server);
+void		setup_signal(int signo, void *handler, int use_siginfo);
+void		send_signal(pid_t pid, int signo);
 void	handler(int signo, siginfo_t *info, void *more_info);
-void	signal_handler(int signo);
-void	setup_signal_handler(void);
-void	send_bit(char c, int bit, pid_t server_pid);
-void	send_char(char c, pid_t server);
-void	setup_signal(int signo, void *handler, int use_siginfo);
-void	send_signal(pid_t pid, int signo);
+
+typedef struct s_client
+{
+	pid_t			pid;
+	char			c;
+	int				bit;
+	struct s_client	*next;
+}	t_client;
 
 #endif
