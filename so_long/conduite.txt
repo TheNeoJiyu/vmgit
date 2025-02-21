@@ -1,0 +1,105 @@
+read docu minilib https://harm-smits.github.io/42docs/libs/minilibx
+
+1    Processing input: The game loop retrieves and handles input from the player, such as keyboard or controller input.
+
+2    Updating the game state: The game loop updates the game's data and objects based on the input and any other events that have occurred.
+
+3    Rendering the game: The game loop generates graphics and audio output based on the updated game state.
+
+4    Pausing and sleeping: The game loop may pause or sleep between iterations to maintain a consistent frame rate or to save resources on the device.
+
+checklist error :
+
+map checklist :
+Parse the map
+
+Votre carte peut être composée de ces 5 caractères :
+0 pour un emplacement vide,
+1 pour un mur,
+C pour un item à collecter (C pour collectible),
+E pour une sortie (E pour exit),
+P pour la position de départ du personnage.
+
+When parsing the map you can already check some errors, before even going further
+
+Does the map file exist ?
+
+Is the map rectangular ?
+
+All the lines should be the same length.
+
+Is there something in the map file ?
+
+Is the map enclosed in walls ?
+
+    Check the first and last lines and columns, they should all be 1
+
+Is there only one exit ?
+
+    Simply count how many E you find on the map.
+
+Is there only one start position ?
+
+    Simply count how many P you find on the map.
+
+Is there at least one collectibles ?
+
+Simply count how many C you find on the map.
+
+_______________________________________________________
+
+game checklist :
+
+Create a window using MiniLibX
+
+    Create the required structure to store all the necessary information
+
+Load all the required sprites (images) for your game and store them into memory
+
+Create the different hooks
+
+key_handler
+
+mouse_handler (if necessary)
+
+close_handler, this is a hook on the red cross that closes the program correctly
+
+loop_hook (=> you game loop)
+
+_______________________________________________________
+
+Render checklist :
+
+Draw the background
+
+Draw the not movable parts of the map
+
+Draw the player
+
+_______________________________________________________
+
+key_handler :
+
+The key handler (at least in my game), is mainly used to call the update_player_position function when W, A, S or D is pressed or to close the program correctly when we press the ESC key.
+
+There's some things you have to think about before updating the player position.
+
+Is the requested new position a Wall ?
+
+    if the new position is a Wall, don't do anything. The subject says that the player should not be able to go through walls
+
+Is the requested new position inside the map ?
+
+    if the new position is outside the map, don't do anything. Normally this shouldn't happen since the map is enclosed in walls but hey, never too sure.
+
+Is the requested new position a Collectible ?
+
+if yes, update the collected items counter and check
+
+check if all collectibles have been collected
+
+    if yes, unlock the exit
+
+        update your map 2D array and replace the collectible by a "floor" tile so that it is not drawn in the next iteration of the game loop.
+
+If the requested new position is not a wall, nor a collectible, nor outside the map, simply set the player position to the requested new position.
