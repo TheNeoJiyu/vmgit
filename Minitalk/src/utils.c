@@ -5,43 +5,44 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: antolefe <antolefe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/21 10:26:44 by antolefe          #+#    #+#             */
-/*   Updated: 2025/01/22 16:51:35 by antolefe         ###   ########.fr       */
+/*   Created: 2025/02/22 15:43:53 by antolefe          #+#    #+#             */
+/*   Updated: 2025/02/23 14:58:33 by antolefe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
-void	send_signal(pid_t pid, int signo)
+void	free_all(t_list **lst)
 {
-	if (kill(pid, signo) < 0)
+	t_list	*tmp;
+	t_list	*next;
+
+	if (!lst || !*lst)
+		return ;
+	tmp = *lst;
+	while (tmp)
 	{
-		perror("Signal transmission failed");
-		exit(EXIT_FAILURE);
+		next = tmp->next;
+		if (tmp->content)
+			free(tmp->content);
+		free(tmp);
+		tmp = next;
 	}
+	*lst = NULL;
 }
 
-void	setup_signal(int signo, void *handler, int use_siginfo)
+void	print_list(t_list **lst)
 {
-	struct sigaction	sa;
+	t_list	*tmp;
 
-	ft_memset(&sa, 0, sizeof(sa));
-	if (use_siginfo)
+	if (!lst || !*lst)
+		return ;
+	tmp = *lst;
+	while (tmp)
 	{
-		sa.sa_flags = SA_SIGINFO;
-		sa.sa_sigaction = handler;
+		if (tmp->content)
+			write(STDOUT_FILENO, (char *)tmp->content, 1);
+		tmp = tmp->next;
 	}
-	else
-	{
-		sa.sa_flags = 0;
-		sa.sa_handler = handler;
-	}
-	sigemptyset(&sa.sa_mask);
-	sigaddset(&sa.sa_mask, SIGUSR1);
-	sigaddset(&sa.sa_mask, SIGUSR2);
-	if (sigaction(signo, &sa, NULL) < 0)
-	{
-		perror("sigaction failed");
-		exit(EXIT_FAILURE);
-	}
+	write(STDOUT_FILENO, "\n", 1);
 }

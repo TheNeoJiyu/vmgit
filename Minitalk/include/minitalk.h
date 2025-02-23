@@ -6,40 +6,28 @@
 /*   By: antolefe <antolefe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:06:29 by antolefe          #+#    #+#             */
-/*   Updated: 2025/02/21 20:01:55 by antolefe         ###   ########.fr       */
+/*   Updated: 2025/02/23 15:01:47 by antolefe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINITALK_H
 # define MINITALK_H
-# define _POSIX_C_SOURCE 200809L
-# define BUSY 1
+# define  _DEFAULT_SOURCE 500
 
 # include "../Libft/libft.h"
-# include <errno.h>
-# include <limits.h>
 # include <signal.h>
-# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/types.h>
 # include <unistd.h>
 
-void		signal_handler(int signo);
-void		setup_signal_handler(void);
-void		send_bit(char c, int bit, pid_t server_pid);
-void		send_char(char c, pid_t server);
-void		setup_signal(int signo, void *handler, int use_siginfo);
-void		send_signal(pid_t pid, int signo);
-void	handler(int signo, siginfo_t *info, void *more_info);
-
-typedef struct s_client
-{
-	pid_t			pid;
-	char			c;
-	int				bit;
-	struct s_client	*next;
-}	t_client;
+void	binary_converter(int signum, char *binary);
+int		make_message(t_list **msg, char c);
+void	signal_handler_s(int signum, siginfo_t *info, void *moreinfo);
+int		char_converter(char c, int pid);
+void	signal_handler_c(int signum);
+void	free_all(t_list **lst);
+void	print_list(t_list **lst);
 
 #endif

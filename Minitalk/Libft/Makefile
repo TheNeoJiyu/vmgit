@@ -6,7 +6,7 @@
 #    By: antolefe <antolefe@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/15 11:50:35 by antolefe          #+#    #+#              #
-#    Updated: 2025/01/21 15:22:30 by antolefe         ###   ########.fr        #
+#    Updated: 2025/02/22 15:52:45 by antolefe         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,9 +23,12 @@ SOURCES = ft_atoi.c ft_bzero.c ft_calloc.c ft_isalnum.c \
 	ft_strlcpy.c ft_strlen.c ft_strncmp.c ft_strnstr.c \
 	ft_strrchr.c ft_tolower.c ft_toupper.c ft_substr.c \
 	ft_strjoin.c ft_strtrim.c ft_split.c ft_itoa.c \
+	ft_lstadd_back.c ft_lstadd_front.c ft_lstclear.c \
+	ft_lstdelone.c ft_lstiter.c ft_lstlast.c ft_lstmap.c \
+	ft_lstnew.c ft_lstsize.c \
 	ft_strmapi.c ft_striteri.c ft_putchar_fd.c ft_putstr_fd.c \
 	ft_putendl_fd.c ft_putnbr_fd.c ft_print_char_str.c ft_printf.c \
-	ft_print_i_d.c ft_print_ptr.c ft_print_u.c ft_print_x_X.c
+	ft_print_i_d.c ft_print_ptr.c ft_print_u.c ft_print_x_X.c 
 
 OBJECTS = $(SOURCES:.c=.o)
 
